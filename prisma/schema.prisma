@@ -10,7 +10,8 @@ datasource db {
 model Game {
   id             String        @id @default(cuid())
   name           String
-  organizerEmail String?
+  organizerName  String
+  organizerEmail String
   createdAt      DateTime      @default(now())
   participants   Participant[]
 }
@@ -18,12 +19,27 @@ model Game {
 model Participant {
   id           String        @id @default(cuid())
   name         String
-  email        String?
+  email        String
   hasDrawn     Boolean       @default(false)
+  wishlist     String?
+  accessToken  String        @unique
   game         Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId       String
   assignedTo   Participant?  @relation("Assignment", fields: [assignedToId], references: [id])
   assignedToId String?
   assignedFrom Participant[] @relation("Assignment")
   createdAt    DateTime      @default(now())
+
+  blockedBy Restriction[] @relation("BlockedBy")
+  blocks    Restriction[] @relation("Blocks")
+}
+
+model Restriction {
+  id                   String      @id @default(cuid())
+  participant          Participant  @relation("Blocks", fields: [participantId], references: [id], onDelete: Cascade)
+  participantId        String
+  blockedParticipant   Participant  @relation("BlockedBy", fields: [blockedParticipantId], references: [id], onDelete: Cascade)
+  blockedParticipantId String
+
+  @@unique([participantId, blockedParticipantId])
 }

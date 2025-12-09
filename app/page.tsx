@@ -20,11 +20,12 @@ export default function HomePage() {
             Secret Santa in minutes
           </div>
           <h1 style={{ margin: "6px 0 0", fontSize: 36, letterSpacing: -0.02 }}>
-            Create a Secret Santa draw, share a link, let people reveal with a flourish.
+            {"Jacob's Secret Santa Generator"}
           </h1>
           <p style={{ margin: "0", color: "var(--muted)", maxWidth: 780 }}>
-            Paste your players, generate a room link, and each person selects their name to get a
-            private match with a playful reveal animation. No logins, just fun.
+            Add your players with emails, set no-pair rules for couples, and we&apos;ll send each
+            person a private link so they can&apos;t peek at anyone else. Reveal animations plus a
+            personal wish list for every participant.
           </p>
         </div>
         <div className="frosted" style={{ padding: 28 }}>

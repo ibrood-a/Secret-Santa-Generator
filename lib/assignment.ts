@@ -13,35 +13,48 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 /**
- * Creates a deranged mapping where no participant is assigned to themselves.
+ * Creates a deranged mapping where no participant is assigned to themselves and
+ * avoids any forbidden drawer->recipient pairs.
  */
-export function buildAssignments(ids: string[]): AssignmentPair[] {
+export function buildAssignments(
+  ids: string[],
+  forbiddenPairs: Array<[string, string]> = []
+): AssignmentPair[] {
   if (ids.length < 2) {
     throw new Error("Need at least two participants for Secret Santa.");
   }
 
-  const shuffled = shuffle(ids);
+  const forbidden = new Set(forbiddenPairs.map(([a, b]) => `${a}|${b}`));
 
-  for (let i = 0; i < ids.length - 1; i += 1) {
-    if (shuffled[i] === ids[i]) {
-      [shuffled[i], shuffled[i + 1]] = [shuffled[i + 1], shuffled[i]];
+  const drawers = shuffle(ids);
+  const recipients = [...ids];
+  const result: AssignmentPair[] = [];
+  const used = new Set<string>();
+
+  const backtrack = (index: number): boolean => {
+    if (index === drawers.length) return true;
+    const drawer = drawers[index];
+    const options = shuffle(
+      recipients.filter(
+        (r) => !used.has(r) && r !== drawer && !forbidden.has(`${drawer}|${r}`)
+      )
+    );
+
+    for (const candidate of options) {
+      result.push({ drawerId: drawer, recipientId: candidate });
+      used.add(candidate);
+      if (backtrack(index + 1)) {
+        return true;
+      }
+      used.delete(candidate);
+      result.pop();
     }
+    return false;
+  };
+
+  if (!backtrack(0)) {
+    throw new Error("Unable to create assignments without breaking restrictions.");
   }
 
-  const lastIndex = ids.length - 1;
-  if (shuffled[lastIndex] === ids[lastIndex]) {
-    [shuffled[lastIndex], shuffled[lastIndex - 1]] = [
-      shuffled[lastIndex - 1],
-      shuffled[lastIndex]
-    ];
-  }
-
-  if (shuffled.some((recipientId, idx) => recipientId === ids[idx])) {
-    throw new Error("Unable to create assignments without self-pairing.");
-  }
-
-  return ids.map((drawerId, idx) => ({
-    drawerId,
-    recipientId: shuffled[idx]
-  }));
+  return result;
 }

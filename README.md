@@ -4,12 +4,14 @@ Next.js + Prisma + Postgres app to spin up a Secret Santa draw, share a join lin
 
 ## Setup
 - Copy `.env.example` to `.env` and set `DATABASE_URL` to your Postgres instance.
+- Add `MAILTRAP_API_TOKEN` (Mailtrap Send API token) and `APP_BASE_URL` (e.g. `http://localhost:3000` or your deployed URL) to `.env`.
 - Install deps: `npm install`
-- Apply schema: `npx prisma migrate dev --name init` (or `npm run prisma:migrate` after shipping migrations).
+- Apply schema: `npx prisma migrate deploy` (or `npx prisma db push` in dev).
 - Generate Prisma client (if needed): `npm run prisma:generate`
 - Start dev server: `npm run dev`
 
 ## How it works
-- Home (`/`): paste participant names (one per line) and create a game. We pre-assign matches server-side to avoid conflicts.
-- Share `game/:id`: each person selects their name. On reveal, they get their recipient and are marked as drawn so nobody else can pick them again.
-- API: `POST /api/games` to create a game, `GET /api/games/:id` to view status, `POST /api/games/:id/draw` to reveal a participant’s match.
+- Home (`/`): enter host name/email, add participants (names + emails), optional no-pair rules, then create. We pre-assign matches server-side to avoid conflicts and restrictions.
+- Each participant gets a unique invite link via email (Mailtrap) and can only reveal from that link at `/play/:token`. They also save a wish list visible only to their Santa.
+- Host dashboard (`/game/:id`): view status and copy invite links.
+- API: `POST /api/games` to create a game (sends emails), `POST /api/play/:token/draw` to reveal via invite, `POST /api/play/:token/wishlist` to save wish lists, `GET /api/games/:id` for host view.

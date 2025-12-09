@@ -10,7 +10,14 @@ export async function GET(_req: Request, { params }: Params) {
       include: {
         participants: {
           orderBy: { name: "asc" },
-          select: { id: true, name: true, hasDrawn: true }
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            hasDrawn: true,
+            wishlist: true,
+            accessToken: true
+          }
         }
       }
     });

@@ -9,8 +9,10 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const userId = session.user.id;
+
   const games = await prisma.game.findMany({
-    where: { userId: session.user.id },
+    where: { userId },
     orderBy: { createdAt: "desc" },
     select: {
       id: true,

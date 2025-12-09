@@ -8,7 +8,8 @@ import authOptions from "../../lib/authOptions";
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const userId = session?.user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest) {
           name: name.trim(),
           organizerName: hostName.trim(),
           organizerEmail: session.user.email || "",
-          userId: session.user.id,
+          userId,
           participants: {
             create: uniqueNames.map((participant) => ({
               name: participant.name,

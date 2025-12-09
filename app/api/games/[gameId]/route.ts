@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 
-type Params = { params: { gameId: string } };
+type Params = { params: Promise<{ gameId: string }> };
 
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(_req: NextRequest, context: Params) {
   try {
+    const { gameId } = await context.params;
     const game = await prisma.game.findUnique({
-      where: { id: params.gameId },
+      where: { id: gameId },
       include: {
         participants: {
           orderBy: { name: "asc" },

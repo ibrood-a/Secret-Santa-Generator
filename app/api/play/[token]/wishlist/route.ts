@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 
-type Params = { params: { token: string } };
+type Params = { params: Promise<{ token: string }> };
 
-export async function POST(req: NextRequest, { params }: Params) {
+export async function POST(req: NextRequest, context: Params) {
   try {
+    const { token } = await context.params;
     const body = await req.json();
     const wishlist: string =
       typeof body?.wishlist === "string" ? body.wishlist.trim().slice(0, 1000) : "";
 
     const participant = await prisma.participant.findUnique({
-      where: { accessToken: params.token }
+      where: { accessToken: token }
     });
 
     if (!participant) {

@@ -1,13 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 
-type Params = { params: { token: string } };
+type Params = { params: Promise<{ token: string }> };
 
-export async function POST(_req: Request, { params }: Params) {
+export async function POST(_req: NextRequest, context: Params) {
   try {
+    const { token } = await context.params;
     const result = await prisma.$transaction(async (tx) => {
       const participant = await tx.participant.findUnique({
-        where: { accessToken: params.token },
+        where: { accessToken: token },
         include: { assignedTo: true }
       });
 

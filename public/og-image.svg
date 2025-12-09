@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Secret Santa Drawer - Built by Jacob Kennedy</title>
+  <desc id="desc">Unique invite links, wish lists, and confetti reveals for Secret Santa games.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#0B1A2C" offset="0%"/>
+      <stop stop-color="#122F4F" offset="50%"/>
+      <stop stop-color="#0B1324" offset="100%"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#F15BB5" offset="0%"/>
+      <stop stop-color="#5CE1E6" offset="100%"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="200" cy="120" r="90" fill="#5CE1E6" opacity="0.16"/>
+  <circle cx="1000" cy="540" r="110" fill="#F15BB5" opacity="0.12"/>
+  <rect x="120" y="120" width="960" height="390" rx="28" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+  <text x="160" y="230" fill="#EDF2FF" font-family="Poppins, 'Segoe UI', sans-serif" font-size="54" font-weight="700">
+    Secret Santa Drawer
+  </text>
+  <text x="160" y="290" fill="#9DB3D4" font-family="Poppins, 'Segoe UI', sans-serif" font-size="26">
+    Unique invite links · No-pair rules · Wish lists · Confetti reveals
+  </text>
+  <rect x="160" y="330" width="450" height="80" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="190" y="375" fill="#EDF2FF" font-family="Poppins, 'Segoe UI', sans-serif" font-size="26" font-weight="700">
+    Built by Jacob Kennedy
+  </text>
+  <rect x="650" y="330" width="300" height="80" rx="18" fill="url(#accent)"/>
+  <text x="680" y="380" fill="#0B1220" font-family="Poppins, 'Segoe UI', sans-serif" font-size="26" font-weight="800">
+    Email unique links
+  </text>
+  <text x="160" y="440" fill="#9DB3D4" font-family="Poppins, 'Segoe UI', sans-serif" font-size="22">
+    Host fast: paste names, enforce exclusions, reveal with wish lists.
+  </text>
+</svg>

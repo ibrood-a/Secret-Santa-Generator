@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { prisma } from "../../../lib/prisma";
 
-export default async function GamePage({ params }: { params: { gameId: string } }) {
+type PageProps = { params: Promise<{ gameId: string }> };
+
+export default async function GamePage({ params }: PageProps) {
+  const { gameId } = await params;
   const game = await prisma.game.findUnique({
-    where: { id: params.gameId },
+    where: { id: gameId },
     select: {
       id: true,
       name: true,

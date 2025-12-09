@@ -29,6 +29,7 @@ export default function PlayClient({ initialData }: PlayClientProps) {
   const [wishlistInput, setWishlistInput] = useState(initialData.participant.wishlist ?? "");
   const [wishlistSaving, setWishlistSaving] = useState(false);
   const [wishlistSaved, setWishlistSaved] = useState(false);
+  const [alreadyDrawn, setAlreadyDrawn] = useState(initialData.participant.hasDrawn);
 
   const handleReveal = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +50,10 @@ export default function PlayClient({ initialData }: PlayClientProps) {
       setReveal(data.recipientName as string);
       setRecipientWishlist((data.recipientWishlist as string) || null);
       setHasDrawn(true);
-      setBurst((b) => b + 1);
+      setAlreadyDrawn(Boolean(data.alreadyDrawn));
+      if (!data.alreadyDrawn) {
+        setBurst((b) => b + 1);
+      }
     } catch {
       setError("Could not reach the server.");
     } finally {
@@ -105,8 +109,8 @@ export default function PlayClient({ initialData }: PlayClientProps) {
       </div>
 
       <form onSubmit={handleReveal} style={{ display: "grid", gap: 12 }}>
-        <button className="button" type="submit" disabled={revealing || hasDrawn}>
-          {revealing ? "Drawing..." : hasDrawn ? "Already drawn" : "Reveal my person"}
+        <button className="button" type="submit" disabled={revealing}>
+          {revealing ? "Drawing..." : hasDrawn ? "Show my person" : "Reveal my person"}
         </button>
         {error ? (
           <div

@@ -16,8 +16,13 @@ export async function POST(_req: NextRequest, context: Params) {
         return { status: 404, error: "Invite not found." } as const;
       }
 
-      if (participant.hasDrawn) {
-        return { status: 409, error: "You already drew your person." } as const;
+      if (participant.hasDrawn && participant.assignedTo) {
+        return {
+          status: 200 as const,
+          recipientName: participant.assignedTo.name,
+          recipientWishlist: participant.assignedTo.wishlist ?? "",
+          alreadyDrawn: true
+        };
       }
 
       if (!participant.assignedTo) {
@@ -32,7 +37,8 @@ export async function POST(_req: NextRequest, context: Params) {
       return {
         status: 200 as const,
         recipientName: participant.assignedTo.name,
-        recipientWishlist: participant.assignedTo.wishlist ?? ""
+        recipientWishlist: participant.assignedTo.wishlist ?? "",
+        alreadyDrawn: false
       };
     });
 
@@ -42,7 +48,8 @@ export async function POST(_req: NextRequest, context: Params) {
 
     return NextResponse.json({
       recipientName: result.recipientName,
-      recipientWishlist: result.recipientWishlist
+      recipientWishlist: result.recipientWishlist,
+      alreadyDrawn: result.alreadyDrawn
     });
   } catch (err) {
     console.error("Failed to draw", err);

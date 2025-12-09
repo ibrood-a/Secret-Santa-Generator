@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id             String        @id @default(cuid())
+  name           String
+  organizerEmail String?
+  createdAt      DateTime      @default(now())
+  participants   Participant[]
+}
+
+model Participant {
+  id           String        @id @default(cuid())
+  name         String
+  email        String?
+  hasDrawn     Boolean       @default(false)
+  game         Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId       String
+  assignedTo   Participant?  @relation("Assignment", fields: [assignedToId], references: [id])
+  assignedToId String?
+  assignedFrom Participant[] @relation("Assignment")
+  createdAt    DateTime      @default(now())
+}

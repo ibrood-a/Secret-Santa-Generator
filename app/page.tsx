@@ -1,7 +1,15 @@
 import Link from "next/link";
 import CreateGameForm from "../components/CreateGameForm";
+import {getServerSession} from "next-auth";
+import authOptions from "./lib/authOptions";
+import {redirect} from "next/navigation";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
   return (
     <main className="page-shell">
       <div style={{ display: "grid", gap: 24, alignItems: "center" }}>

@@ -1,6 +1,10 @@
-import nextAuthMiddleware from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
 
-export default nextAuthMiddleware;
+export default withAuth({
+  callbacks: {
+    authorized: ({ token }) => Boolean(token?.id)
+  }
+});
 
 export const config = {
   matcher: ["/dashboard", "/game/:path*"]

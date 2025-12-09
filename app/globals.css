@@ -97,6 +97,34 @@ select option {
   color: var(--text);
 }
 
+@media (max-width: 720px) {
+  .page-shell {
+    padding: 32px 16px 56px;
+  }
+
+  .frosted {
+    padding: 18px !important;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pill {
+    font-size: 13px;
+    padding: 9px 12px;
+  }
+
+  .reveal-card {
+    padding: 18px 16px;
+  }
+
+  .builder-badge {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
 label {
   display: block;
   color: var(--muted);

@@ -85,6 +85,16 @@ select {
     linear-gradient(135deg, var(--accent-2) 50%, transparent 50%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06));
   padding-right: 42px;
+  color: var(--text);
+  background-color: rgba(16, 38, 64, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  outline: none;
+}
+
+select option {
+  background-color: #0f2038;
+  color: var(--text);
 }
 
 label {

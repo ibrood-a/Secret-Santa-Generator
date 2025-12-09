@@ -16,9 +16,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="builder-badge">Built by Jacob Kennedy</div>
         <div style={{ position: "fixed", top: 18, right: 18, zIndex: 90 }}>
           {session?.user ? (
-            <a href="/dashboard" className="pill" style={{ background: "rgba(92,225,230,0.12)" }}>
-              Dashboard
-            </a>
+            <div style={{ display: "flex", gap: 8 }}>
+              <a href="/dashboard" className="pill" style={{ background: "rgba(92,225,230,0.12)" }}>
+                Dashboard
+              </a>
+              <form action="/api/auth/signout" method="post">
+                <button
+                  type="submit"
+                  className="pill"
+                  style={{
+                    background: "rgba(255,255,255,0.07)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    cursor: "pointer"
+                  }}
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           ) : (
             <a href="/login" className="pill" style={{ background: "rgba(255,255,255,0.05)" }}>
               Sign in

@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const name: string | undefined = body?.name;
-    const organizerEmail: string | undefined = body?.organizerEmail;
     const hostName: string | undefined = body?.hostName;
     const participantInput: Array<{ name: string; email: string }> = Array.isArray(
       body?.participants
@@ -30,9 +29,6 @@ export async function POST(req: NextRequest) {
     }
     if (!hostName?.trim()) {
       return NextResponse.json({ error: "Host name is required." }, { status: 400 });
-    }
-    if (!organizerEmail?.trim()) {
-      return NextResponse.json({ error: "Host email is required." }, { status: 400 });
     }
 
     const sanitizedParticipants = participantInput
@@ -81,7 +77,7 @@ export async function POST(req: NextRequest) {
         data: {
           name: name.trim(),
           organizerName: hostName.trim(),
-          organizerEmail: organizerEmail.trim(),
+          organizerEmail: session.user.email || "",
           userId: session.user.id,
           participants: {
             create: uniqueNames.map((participant) => ({

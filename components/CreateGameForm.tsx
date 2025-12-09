@@ -22,16 +22,13 @@ type RestrictionRow = { id: string; a: string; b: string };
 type ParticipantInput = { id: string; name: string; email: string };
 
 const demoList: ParticipantInput[] = [
-  { id: "a", name: "Alex Frost", email: "alex@example.com" },
-  { id: "b", name: "Sam Bright", email: "sam@example.com" },
-  { id: "c", name: "Jordan Snow", email: "jordan@example.com" },
-  { id: "d", name: "Priya North", email: "priya@example.com" }
+  { id: crypto.randomUUID(), name: "", email: "" },
+  { id: crypto.randomUUID(), name: "", email: "" }
 ];
 
 export default function CreateGameForm() {
   const [name, setName] = useState("Jacob's Secret Santa Game");
   const [hostName, setHostName] = useState("Jacob Kennedy");
-  const [email, setEmail] = useState("jacob@giftswap.site");
   const [participants, setParticipants] = useState<ParticipantInput[]>(demoList);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
@@ -41,6 +38,7 @@ export default function CreateGameForm() {
   const [restrictions, setRestrictions] = useState<RestrictionRow[]>([]);
   const [restrictionA, setRestrictionA] = useState("");
   const [restrictionB, setRestrictionB] = useState("");
+  const [importText, setImportText] = useState("");
 
   useEffect(() => {
     setShareLink(created ? `${window.location.origin}/game/${created.id}` : "");
@@ -95,7 +93,6 @@ export default function CreateGameForm() {
         body: JSON.stringify({
           name,
           hostName,
-          organizerEmail: email,
           participants: cleaned,
           restrictions: restrictions.map((r) => [r.a, r.b])
         })
@@ -145,28 +142,15 @@ export default function CreateGameForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: "grid", gap: 18 }}>
-      <div style={{ display: "grid", gap: 8, gridTemplateColumns: "1fr 1fr", alignItems: "center" }}>
-        <div>
-          <label htmlFor="hostName">Host name</label>
-          <input
-            id="hostName"
-            value={hostName}
-            onChange={(e) => setHostName(e.target.value)}
-            placeholder="Your name"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Host email (used for confirmations)</label>
-          <input
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            type="email"
-            required
-          />
-        </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        <label htmlFor="hostName">Host name</label>
+        <input
+          id="hostName"
+          value={hostName}
+          onChange={(e) => setHostName(e.target.value)}
+          placeholder="Your name"
+          required
+        />
       </div>
       <div style={{ display: "grid", gap: 8 }}>
         <label htmlFor="name">Game title</label>
@@ -198,6 +182,55 @@ export default function CreateGameForm() {
             }
           >
             + Add person
+          </button>
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gap: 8,
+            padding: "12px 14px",
+            background: "rgba(255,255,255,0.03)",
+            borderRadius: 12,
+            border: "1px solid rgba(255,255,255,0.05)"
+          }}
+        >
+          <label htmlFor="import">Quick import (Name, Email per line)</label>
+          <textarea
+            id="import"
+            value={importText}
+            onChange={(e) => setImportText(e.target.value)}
+            rows={3}
+            placeholder="Name, email@example.com"
+          />
+          <button
+            type="button"
+            className="button"
+            style={{ padding: "10px 12px", justifySelf: "flex-start" }}
+            onClick={() => {
+              const lines = importText.split("\n").map((l) => l.trim()).filter(Boolean);
+              const parsed = lines
+                .map((line) => {
+                  const [rawName, rawEmail] = line.split(",");
+                  const nameVal = rawName?.trim() || "";
+                  const emailVal = rawEmail?.trim() || "";
+                  if (!nameVal || !emailVal) return null;
+                  return { id: crypto.randomUUID(), name: nameVal, email: emailVal };
+                })
+                .filter((v): v is ParticipantInput => Boolean(v));
+              if (parsed.length === 0) return;
+              // Merge and dedupe by email
+              const existingByEmail = new Map<string, ParticipantInput>();
+              const merged: ParticipantInput[] = [];
+              parsed.forEach((p) => {
+                if (!existingByEmail.has(p.email.toLowerCase())) {
+                  existingByEmail.set(p.email.toLowerCase(), p);
+                  merged.push(p);
+                }
+              });
+              setParticipants(merged);
+            }}
+          >
+            Import list
           </button>
         </div>
         <div style={{ display: "grid", gap: 10 }}>

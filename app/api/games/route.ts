@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
+import { getServerSession } from "next-auth";
 import { prisma } from "../../../lib/prisma";
 import { buildAssignments } from "../../../lib/assignment";
+import authOptions from "../../lib/authOptions";
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     const name: string | undefined = body?.name;
     const organizerEmail: string | undefined = body?.organizerEmail;
@@ -75,6 +82,7 @@ export async function POST(req: NextRequest) {
           name: name.trim(),
           organizerName: hostName.trim(),
           organizerEmail: organizerEmail.trim(),
+          userId: session.user.id,
           participants: {
             create: uniqueNames.map((participant) => ({
               name: participant.name,

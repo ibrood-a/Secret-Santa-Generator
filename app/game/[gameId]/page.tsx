@@ -28,9 +28,10 @@ export default async function GamePage({ params }: { params: { gameId: string } 
     notFound();
   }
 
-  const headerList = headers();
+  const headerList = await headers();
+  const origin = headerList.get("origin");
   const baseUrl =
-    headerList.get("origin") ||
+    origin ||
     process.env.APP_BASE_URL ||
     `${process.env.VERCEL_URL ? "https://" : "http://"}${process.env.VERCEL_URL ?? "localhost:3000"}`;
 

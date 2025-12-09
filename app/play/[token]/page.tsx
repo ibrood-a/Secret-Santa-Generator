@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
 import PlayClient from "./PlayClient";
 
-export default async function PlayPage({ params }: { params: { token: string } }) {
+type PageProps = { params: Promise<{ token: string }> };
+
+export default async function PlayPage({ params }: PageProps) {
+  const { token } = await params;
   const participant = await prisma.participant.findUnique({
-    where: { accessToken: params.token },
+    where: { accessToken: token },
     include: {
       game: { select: { id: true, name: true, organizerName: true } }
     }

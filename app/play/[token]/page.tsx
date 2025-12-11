@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
 import PlayClient from "./PlayClient";
 
 type PageProps = { params: Promise<{ token: string }> };
+
+export const metadata: Metadata = {
+  title: "Reveal your Secret Santa match",
+  description: "Private reveal link for Secret Santa Drawer participants.",
+  robots: { index: false, follow: false }
+};
 
 export default async function PlayPage({ params }: PageProps) {
   const { token } = await params;

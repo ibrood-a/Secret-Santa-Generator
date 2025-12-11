@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { prisma } from "../../../lib/prisma";
 
 type PageProps = { params: Promise<{ gameId: string }> };
+
+export const metadata: Metadata = {
+  title: "Host view | Secret Santa Drawer",
+  description: "Private host dashboard for Secret Santa participants and invite links.",
+  robots: { index: false, follow: false }
+};
 
 export default async function GamePage({ params }: PageProps) {
   const { gameId } = await params;

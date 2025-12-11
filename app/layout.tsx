@@ -3,33 +3,78 @@ import { getServerSession } from "next-auth";
 import "./globals.css";
 import authOptions from "./lib/authOptions";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_BASE_URL || "http://localhost:3000";
+const rawSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.APP_BASE_URL || "http://localhost:3000";
+const siteUrl = rawSiteUrl.replace(/\/+$/, "");
+const siteName = "Secret Santa Drawer";
+const siteDescription =
+  "Organize Secret Santa games with private email invites, no-repeat rules for couples, wish lists, and fast reveal animations.";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: siteName,
+      url: siteUrl,
+      description: siteDescription,
+      inLanguage: "en-US"
+    },
+    {
+      "@type": "WebApplication",
+      name: siteName,
+      applicationCategory: "ProductivityApplication",
+      operatingSystem: "Web",
+      url: siteUrl,
+      featureList: [
+        "Private invite links for every participant",
+        "Wishlist collection and sharing",
+        "Couples and no-repeat match rules",
+        "Pre-assigned draws to avoid conflicts",
+        "Host dashboard with reveal status"
+      ],
+      creator: { "@type": "Person", name: "Jacob Kennedy" },
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      potentialAction: {
+        "@type": "RegisterAction",
+        target: `${siteUrl}/signup`,
+        name: "Create a Secret Santa game"
+      }
+    }
+  ]
+};
 
 export const metadata: Metadata = {
-  title: "Secret Santa Drawer | Unique links, wish lists, no duplicates",
-  description:
-    "Host Secret Santa games, email unique invite links, enforce no-pair rules, and reveal with wish lists and animation.",
   metadataBase: new URL(siteUrl),
+  title: {
+    default: `${siteName} | Unique links, wish lists, no duplicates`,
+    template: `%s | ${siteName}`
+  },
+  description: siteDescription,
+  applicationName: siteName,
+  authors: [{ name: "Jacob Kennedy" }],
+  creator: "Jacob Kennedy",
+  publisher: "Jacob Kennedy",
+  category: "Events",
   alternates: {
     canonical: "/"
   },
   keywords: [
-    "Secret Santa",
-    "gift exchange",
-    "holiday",
-    "Christmas",
-    "wish list",
-    "random draw",
+    "secret santa generator",
+    "secret santa app",
+    "gift exchange organizer",
+    "holiday party ideas",
+    "wishlist secret santa",
+    "no repeat secret santa",
     "couples exclusion",
-    "private links",
-    "email invites"
+    "private invite links",
+    "email secret santa invites",
+    "virtual secret santa"
   ],
   openGraph: {
-    title: "Secret Santa Drawer | Host and reveal with wish lists",
-    description:
-      "Create Secret Santa games, send unique invite links, enforce no-pair rules, and reveal with confetti and wish lists.",
+    title: `${siteName} | Host and reveal with wish lists`,
+    description: siteDescription,
     url: siteUrl,
-    siteName: "Secret Santa Drawer",
+    siteName,
     images: [
       {
         url: "/og-image.svg",
@@ -43,11 +88,23 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Secret Santa Drawer",
+    title: siteName,
     description:
       "Email unique links, reveal matches privately, and collect wish lists. Built by Jacob Kennedy.",
     images: ["/og-image.svg"]
-  }
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1
+    }
+  },
+  themeColor: "#0b1a2c"
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -59,18 +116,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           type="application/ld+json"
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Secret Santa Drawer",
-              url: siteUrl,
-              creator: {
-                "@type": "Person",
-                name: "Jacob Kennedy"
-              },
-              description:
-                "Host Secret Santa games with unique links, wish lists, and no-pair rules. Built by Jacob Kennedy."
-            })
+            __html: JSON.stringify(structuredData)
           }}
         />
         <div className="builder-badge">Built by Jacob Kennedy</div>

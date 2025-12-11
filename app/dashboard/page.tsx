@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import authOptions from "../lib/authOptions";
+
+export const metadata: Metadata = {
+  title: "Secret Santa dashboard",
+  description: "View and manage every Secret Santa game you host.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/dashboard" }
+};
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);

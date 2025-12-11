@@ -4,13 +4,37 @@ module.exports = {
   generateRobotsTxt: true,
   changefreq: "weekly",
   priority: 0.7,
-  exclude: ["/api/*"],
+  exclude: [
+    "/api/*",
+    "/dashboard",
+    "/game/*",
+    "/play/*",
+    "/login",
+    "/signup",
+    "/reset-password",
+    "/forgot-password",
+    "/forgot-username",
+    "/verify"
+  ],
   robotsTxtOptions: {
     policies: [
       {
         userAgent: "*",
         allow: ["/"],
-        disallow: ["/api", "/api/*"]
+        disallow: [
+          "/api",
+          "/api/*",
+          "/dashboard",
+          "/game",
+          "/game/*",
+          "/play",
+          "/play/*",
+          "/login",
+          "/reset-password",
+          "/forgot-password",
+          "/forgot-username",
+          "/verify"
+        ]
       }
     ]
   }

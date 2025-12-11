@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Verify your Secret Santa account",
+  description: "Confirm your email to finish setting up Secret Santa Drawer.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/verify" }
+};
 
 async function verifyToken(token: string, email: string) {
   const res = await fetch(`${process.env.APP_BASE_URL || ""}/api/auth/verify`, {
